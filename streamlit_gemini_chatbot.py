@@ -12,6 +12,8 @@ if "temperature" not in st.session_state:
     st.session_state.temperature = 0.7
 if "selected_model" not in st.session_state:
     st.session_state.selected_model = "gemini-2.5-flash"
+if "answer_length" not in st.session_state:
+    st.session_state.answer_length = "medium"
 if "mensajes" not in st.session_state:
     st.session_state.mensajes = []
 
@@ -39,12 +41,21 @@ with right_col:
         )
         st.caption("0 = determinístico · 2 = creativo")
 
+        length_options = {"Corta": "short", "Media": "medium", "Larga": "long"}
+        selected_length = st.selectbox(
+            "Longitud",
+            list(length_options.keys()),
+            index=list(length_options.values()).index(st.session_state.answer_length)
+        )
+        answer_length = length_options[selected_length]
+
         apply_btn = st.form_submit_button("Aplicar")
 
     # Apply the form values when submitted
     if apply_btn:
         st.session_state.selected_model = selected
         st.session_state.temperature = temp
+        st.session_state.answer_length = answer_length
         st.experimental_rerun()
 
     # Keep a separate clear button for immediate clearing
@@ -75,7 +86,18 @@ with left_col:
 
         st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
-        respuesta = chat_model.invoke(st.session_state.mensajes)
+        # Build messages with system prompt for answer length
+        length_instructions = {
+            "short": "Proporciona respuestas muy breves y concisas, en máximo 2-3 oraciones.",
+            "medium": "Proporciona respuestas moderadas con explicaciones claras, alrededor de un párrafo.",
+            "long": "Proporciona respuestas detalladas y completas con ejemplos cuando sea relevante."
+        }
+        
+        messages_with_context = [
+            HumanMessage(content=length_instructions.get(st.session_state.answer_length, "medium"))
+        ] + st.session_state.mensajes
+
+        respuesta = chat_model.invoke(messages_with_context)
 
         with st.chat_message("assistant"):
             st.markdown(respuesta.content)
