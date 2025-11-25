@@ -3,9 +3,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import AIMessage, HumanMessage
 
 # Configuración inicial
-st.set_page_config(page_title="Chatbot Básico", page_icon="🤖", layout="wide")
-st.title("🤖 Chatbot - paso 2 - con LangChain")
-st.markdown("Este es un *chatbot de ejemplo* construido con LangChain + Streamlit.")
+st.set_page_config(page_title="Chatbot Básico", page_icon="🛸", layout="wide")
+st.title("Bienvenido al chatbot configurable con tecnología Gemini")
+st.markdown("Construido con LangChain + Streamlit.")
 
 # Inicializar session_state variables
 if "temperature" not in st.session_state:
@@ -24,7 +24,7 @@ left_col, right_col = st.columns([10, 2])
 with right_col:
     # Use a form so changes are applied only when the user clicks 'Aplicar'.
     with st.form("config_form"):
-        st.write("⚙️ Configuración")
+        st.write("Configuración")
         models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
         selected = st.selectbox(
             "Modelo",
@@ -33,7 +33,7 @@ with right_col:
         )
 
         temp = st.slider(
-            "Temp",
+            "Temperatura",
             min_value=0.0,
             max_value=2.0,
             value=st.session_state.temperature,
@@ -59,7 +59,7 @@ with right_col:
         st.experimental_rerun()
 
     # Keep a separate clear button for immediate clearing
-    if st.button("🗑️ Limpiar", use_container_width=True):
+    if st.button("Vaciar chat", use_container_width=True):
         st.session_state.mensajes = []
         st.experimental_rerun()
 
@@ -77,7 +77,7 @@ with left_col:
             st.markdown(msg.content)
 
     # Input de usuario
-    pregunta = st.chat_input("Escribe tu mensaje:")
+    pregunta = st.chat_input("¿En qué estás pensando?:")
 
     if pregunta:
         # Mostrar y almacenar mensaje del usuario
