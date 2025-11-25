@@ -78,30 +78,31 @@ with left_col:
         with st.chat_message(role):
             st.markdown(msg.content)
 
-    # Input de usuario
-    pregunta = st.chat_input("¿En qué estás pensando?")
+# Input de usuario SIEMPRE fuera del bloque de columnas para que quede abajo
+pregunta = st.chat_input("¿En qué estás pensando?")
 
-    if pregunta:
-        # Mostrar y almacenar mensaje del usuario
+if pregunta:
+    # Mostrar y almacenar mensaje del usuario
+    with left_col:
         with st.chat_message("user"):
             st.markdown(pregunta)
 
-        st.session_state.mensajes.append(HumanMessage(content=pregunta))
+    st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
-        # Construye mensajes con instrucciones de longitud
-        length_instructions = {
-            "short": "Proporciona respuestas muy breves y concisas, en máximo 2-3 oraciones.",
-            "medium": "Proporciona respuestas moderadas con explicaciones claras, alrededor de un párrafo.",
-            "long": "Proporciona respuestas detalladas y completas con ejemplos cuando sea relevante."
-        }
-        
-        messages_with_context = [
-            HumanMessage(content=length_instructions.get(st.session_state.answer_length, "medium"))
-        ] + st.session_state.mensajes
+    # Construye mensajes con instrucciones de longitud
+    length_instructions = {
+        "short": "Proporciona respuestas muy breves y concisas, en máximo 2-3 oraciones.",
+        "medium": "Proporciona respuestas moderadas con explicaciones claras, alrededor de un párrafo.",
+        "long": "Proporciona respuestas detalladas y completas con ejemplos cuando sea relevante."
+    }
+    messages_with_context = [
+        HumanMessage(content=length_instructions.get(st.session_state.answer_length, "medium"))
+    ] + st.session_state.mensajes
 
-        respuesta = chat_model.invoke(messages_with_context)
+    respuesta = chat_model.invoke(messages_with_context)
 
+    with left_col:
         with st.chat_message("assistant"):
             st.markdown(respuesta.content)
 
-        st.session_state.mensajes.append(respuesta)
+    st.session_state.mensajes.append(respuesta)
