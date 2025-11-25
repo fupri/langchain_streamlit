@@ -17,12 +17,12 @@ if "answer_length" not in st.session_state:
 if "mensajes" not in st.session_state:
     st.session_state.mensajes = []
 
-# Layout: main chat area (left) and controls (right)
+# Layout: area principal del chat (izquierda) y controles (derecha)
 left_col, right_col = st.columns([10, 2])
 
-# Controls in the right column (acts like a right sidebar)
+# Controles en la columna derecha (actúa como una barra lateral derecha)
 with right_col:
-    # Use a form so changes are applied only when the user clicks 'Aplicar'.
+    # Usa un formulario para que los cambios se apliquen solo cuando el usuario haga clic en 'Aplicar'.
     with st.form("config_form"):
         st.write("Configuración")
         models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
@@ -51,19 +51,19 @@ with right_col:
 
         apply_btn = st.form_submit_button("Aplicar")
 
-    # Apply the form values when submitted
+    # Aplicar cambios de configuración al hacer clic en 'Aplicar'
     if apply_btn:
         st.session_state.selected_model = selected
         st.session_state.temperature = temp
         st.session_state.answer_length = answer_length
         st.experimental_rerun()
 
-    # Keep a separate clear button for immediate clearing
+    # Mantener un botón separado para limpiar inmediatamente
     if st.button("Vaciar chat", use_container_width=True):
         st.session_state.mensajes = []
         st.experimental_rerun()
 
-# Initialize chat model with current settings
+# Inicializar el modelo del chat con la configuracion actual
 chat_model = ChatGoogleGenerativeAI(
     model=st.session_state.selected_model,
     temperature=st.session_state.temperature
@@ -86,7 +86,7 @@ with left_col:
 
         st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
-        # Build messages with system prompt for answer length
+        # Construye mensajes con instrucciones de longitud
         length_instructions = {
             "short": "Proporciona respuestas muy breves y concisas, en máximo 2-3 oraciones.",
             "medium": "Proporciona respuestas moderadas con explicaciones claras, alrededor de un párrafo.",
