@@ -14,6 +14,8 @@ if "selected_model" not in st.session_state:
     st.session_state.selected_model = "gemini-2.5-flash"
 if "answer_length" not in st.session_state:
     st.session_state.answer_length = "medium"
+if "infer_context" not in st.session_state:
+    st.session_state.infer_context = True
 if "mensajes" not in st.session_state:
     st.session_state.mensajes = []
 
@@ -46,6 +48,12 @@ with st.sidebar.form("config_form"):
     )
     answer_length = length_options[selected_length]
 
+    # Opción para inferir contexto automáticamente si la pregunta es ambigua
+    infer = st.checkbox(
+        "Inferir contexto si es ambiguo",
+        value=st.session_state.infer_context
+    )
+
     apply_btn = st.form_submit_button("Aplicar")
 
 # Aplicar cambios de configuración al hacer clic en 'Aplicar'
@@ -53,6 +61,7 @@ if 'apply_btn' in locals() and apply_btn:
     st.session_state.selected_model = selected
     st.session_state.temperature = temp
     st.session_state.answer_length = answer_length
+    st.session_state.infer_context = infer
     st.rerun()
 
 # Botón separado en la barra lateral para limpiar inmediatamente
@@ -82,15 +91,25 @@ if pregunta:
 
     st.session_state.mensajes.append(HumanMessage(content=pregunta))
 
-    # Construye mensajes con instrucciones de longitud
+    # Construye mensajes con instrucciones de contexto y longitud
     length_instructions = {
         "short": "Proporciona respuestas muy breves y concisas, en máximo 2-3 oraciones.",
         "medium": "Proporciona respuestas moderadas con explicaciones claras, alrededor de un párrafo.",
         "long": "Proporciona respuestas detalladas y completas con ejemplos cuando sea relevante."
     }
-    messages_with_context = [
-        HumanMessage(content=length_instructions.get(st.session_state.answer_length, "medium"))
-    ] + st.session_state.mensajes
+
+    preface = []
+    if st.session_state.infer_context:
+        infer_instruction = (
+            "Si la pregunta resulta ambigua, infiere el contexto relevante a partir de los mensajes anteriores "
+            "y responde en función de esa inferencia. Solo pide aclaración si realmente falta información clave."
+        )
+        preface.append(HumanMessage(content=infer_instruction))
+
+    # Añadir la instrucción de longitud después de la instrucción de inferencia (si existe)
+    preface.append(HumanMessage(content=length_instructions.get(st.session_state.answer_length, "medium")))
+
+    messages_with_context = preface + st.session_state.mensajes
 
     respuesta = chat_model.invoke(messages_with_context)
 
