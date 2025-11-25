@@ -41,9 +41,9 @@ with right_col:
         )
         st.caption("0 = determinístico · 2 = creativo")
 
-        length_options = {"Corta (Breve y conciso, 2-3 oraciones)": "short", 
-                          "Media (Explicación clara, un párrafo)": "medium", 
-                          "Larga (Respuesta detallada, con ejemplos si es necesario)": "long"}
+        length_options = {"Corta (Breve y conciso)": "short", 
+                          "Media (Explicación clara)": "medium", 
+                          "Larga (Respuesta muy detallada)": "long"}
         selected_length = st.selectbox(
             "Longitud",
             list(length_options.keys()),
