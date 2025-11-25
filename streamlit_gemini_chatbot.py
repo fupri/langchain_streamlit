@@ -41,7 +41,9 @@ with right_col:
         )
         st.caption("0 = determinístico · 2 = creativo")
 
-        length_options = {"Corta": "short", "Media": "medium", "Larga": "long"}
+        length_options = {"Corta (Breve y conciso, 2-3 oraciones)": "short", 
+                          "Media (Explicación clara, un párrafo)": "medium", 
+                          "Larga (Respuesta detallada, con ejemplos si es necesario)": "long"}
         selected_length = st.selectbox(
             "Longitud",
             list(length_options.keys()),
@@ -77,7 +79,7 @@ with left_col:
             st.markdown(msg.content)
 
     # Input de usuario
-    pregunta = st.chat_input("¿En qué estás pensando?:")
+    pregunta = st.chat_input("¿En qué estás pensando?")
 
     if pregunta:
         # Mostrar y almacenar mensaje del usuario
