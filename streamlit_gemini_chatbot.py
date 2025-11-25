@@ -3,9 +3,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import AIMessage, HumanMessage
 
 # Configuración inicial
-st.set_page_config(page_title="Chatbot Básico", page_icon="🛸", layout="wide")
-st.title("Bienvenido al chatbot configurable con tecnología Gemini")
-st.markdown("Construido con LangChain + Streamlit.")
+st.set_page_config(page_title="Chatbot Configurable", page_icon="🛸", layout="wide")
+st.title("Bienvenido, ¿en que puedo ayudarte hoy?")
+st.markdown("Construido con LangChain + Streamlit")
 
 # Inicializar session_state variables
 if "temperature" not in st.session_state:
