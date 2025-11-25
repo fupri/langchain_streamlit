@@ -56,12 +56,12 @@ with right_col:
         st.session_state.selected_model = selected
         st.session_state.temperature = temp
         st.session_state.answer_length = answer_length
-        st.experimental_rerun()
+        st.rerun()
 
     # Mantener un botón separado para limpiar inmediatamente
     if st.button("Vaciar chat", use_container_width=True):
         st.session_state.mensajes = []
-        st.experimental_rerun()
+        st.rerun()
 
 # Inicializar el modelo del chat con la configuracion actual
 chat_model = ChatGoogleGenerativeAI(
